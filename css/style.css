@@ -29,3 +29,11 @@
 .detail-dialog-plan{background:#edf1e4;color:var(--green);border:1px solid #dce3d2}
 .info-card .card-detail-trigger{margin-top:12px}
 @media(max-width:760px){.deep-dive-section{padding-top:40px!important}.detail-dialog-grid{grid-template-columns:1fr}.detail-dialog{padding:22px 18px}.detail-dialog-image{max-height:210px}.detail-dialog-actions{display:grid;grid-template-columns:1fr}.detail-dialog-actions .button{width:100%}}
+
+/* Dedicated industry category pages */
+.detail-workflow-list{padding:0;list-style:none;counter-reset:workflow;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.detail-workflow-list li{counter-increment:workflow;position:relative;padding:22px 22px 22px 64px;background:var(--cream);font-size:12px;line-height:1.8;color:var(--muted);min-height:86px}
+.detail-workflow-list li:before{content:counter(workflow,decimal-leading-zero);position:absolute;left:20px;top:20px;color:var(--green);font-family:var(--serif);font-size:22px}
+#detail-overview-grid .info-card p,#detail-roles .info-card p,#detail-systems .info-card p,#detail-metrics .info-card p{line-height:1.8}
+#detail-title{max-width:900px}
+@media(max-width:760px){.detail-workflow-list{grid-template-columns:1fr}}
