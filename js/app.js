@@ -13,5 +13,38 @@ document.addEventListener('DOMContentLoaded',()=>{
  const industryCards=[...document.querySelectorAll('.industry-card')],industrySearch=document.querySelector('#industry-search'),industryButtons=[...document.querySelectorAll('[data-industry-filter]')];
  if(industryCards.length){let phase='all';const applyIndustry=()=>{const term=(industrySearch?.value||'').trim().toLowerCase();let count=0;industryCards.forEach(card=>{const matchTerm=(card.dataset.searchable||card.textContent).toLowerCase().includes(term);const matchPhase=phase==='all'||card.dataset.phase===phase;card.hidden=!(matchTerm&&matchPhase);if(!card.hidden)count++});const status=document.querySelector('#industry-count');if(status)status.textContent=count+' categor'+(count===1?'y':'ies')+' shown'};industrySearch?.addEventListener('input',applyIndustry);industryButtons.forEach(btn=>btn.addEventListener('click',()=>{phase=btn.dataset.industryFilter;industryButtons.forEach(b=>b.classList.toggle('active',b===btn));applyIndustry()}));applyIndustry()}
  const tripDestination=document.querySelector('[name="trip-destination"]');if(tripDestination){const queryDestination=new URLSearchParams(window.location.search).get('destination');if(queryDestination)tripDestination.value=queryDestination}
+ // Universal card/category details: every catalogue card can open an accessible, expanded detail view.
+ const detailCards=[...document.querySelectorAll('.catalog-card, .info-card, .experience-tile, .destination-card')];
+ if(detailCards.length){
+  const dialog=document.createElement('dialog');dialog.className='detail-dialog';dialog.setAttribute('aria-labelledby','detail-dialog-title');
+  dialog.innerHTML='<div class="detail-dialog-top"><p class="eyebrow">WANDERLY FIELD GUIDE</p><button type="button" class="detail-dialog-close" aria-label="Close details">×</button></div><div class="detail-dialog-content"></div>';
+  document.body.appendChild(dialog);
+  const close=dialog.querySelector('.detail-dialog-close'),content=dialog.querySelector('.detail-dialog-content');
+  const openDetails=(card)=>{
+   const title=card.querySelector('h3,h2')?.textContent?.trim()||card.querySelector('.destination-caption h3')?.textContent?.trim()||'Travel details';
+   const eyebrow=card.querySelector('.eyebrow,.card-tag')?.textContent?.trim()||'TRAVEL GUIDE';
+   const paragraphs=[...card.querySelectorAll('p')].map(p=>p.textContent.trim()).filter(t=>t&&t!==eyebrow&&!pIsEyebrow(t,eyebrow));
+   const description=paragraphs[0]||card.querySelector('.destination-caption')?.textContent?.trim()||'Explore this option and verify current details before making arrangements.';
+   const imageEl=card.querySelector('img'),imageMarkup=imageEl?'<img class="detail-dialog-image" src="'+escapeHtml(imageEl.src)+'" alt="'+escapeHtml(imageEl.alt||title)+'">':'';
+   const category=card.dataset.category||card.dataset.phase||eyebrow;
+   const links=[...card.querySelectorAll('a[href]')].map(a=>({href:a.href,label:a.textContent.trim()})).filter(a=>a.label&&a.href&&!a.href.endsWith('#'));
+   const primary=links[0];
+   const fit=title.toLowerCase().includes('transport')||title.toLowerCase().includes('rail')||title.toLowerCase().includes('road')?'Compare total door-to-door time, reliability, accessibility and the full fare.':title.toLowerCase().includes('stay')||title.toLowerCase().includes('hotel')||title.toLowerCase().includes('rental')?'Compare location, inclusions, total price, cancellation terms and accessibility.':title.toLowerCase().includes('software')||title.toLowerCase().includes('system')||title.toLowerCase().includes('distribution')?'Validate provider, features, integrations, support, data handling and total cost against your real workflow.':'Match the option to your dates, interests, group needs, budget and preferred pace.';
+   const checklist=title.toLowerCase().includes('software')||title.toLowerCase().includes('system')||title.toLowerCase().includes('distribution')?['Open the official provider page and verify current product scope.','Confirm pricing model, plan limits, regional availability and support.','Test the exact workflow, integrations, export and security requirements.']:['Check dates, seasonality, access rules and current local guidance.','Confirm total cost, inclusions, cancellation terms and provider contacts.','Review accessibility, safety, travel time and a backup option.'];
+   content.innerHTML=imageMarkup+'<p class="eyebrow">'+escapeHtml(eyebrow)+'</p><h2 id="detail-dialog-title">'+escapeHtml(title)+'</h2><p class="detail-dialog-lead">'+escapeHtml(description)+'</p><div class="detail-dialog-grid"><section><h3>Overview</h3><p>This entry sits within <b>'+escapeHtml(category.replace(/\|/g,', '))+'</b>. Use the summary as a starting point, then confirm the exact offer, operating conditions and current details with the relevant provider or official source.</p></section><section><h3>Who it may suit</h3><p>'+escapeHtml(fit)+'</p></section><section><h3>Planning checklist</h3><ul>'+checklist.map(item=>'<li>'+escapeHtml(item)+'</li>').join('')+'</ul></section><section><h3>What to verify</h3><p>Check recent information, exact inclusions, additional fees, change or cancellation conditions, accessibility, safety and the contact route for support. Do not treat illustrative descriptions as live availability or a guarantee.</p></section></div><div class="detail-dialog-actions">'+(primary?'<a class="button button-dark" href="'+escapeHtml(primary.href)+'">'+escapeHtml(primary.label||'Continue')+' ↗</a>':'')+'<a class="button button-light detail-dialog-plan" href="plan.html">Add to trip plan ↗</a></div>';
+   if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+  };
+  function pIsEyebrow(text,eyebrow){return text===eyebrow;}
+  detailCards.forEach(card=>{
+   if(card.classList.contains('destination-card')){card.addEventListener('click',event=>{event.preventDefault();openDetails(card)});card.setAttribute('aria-label','Open details: '+(card.querySelector('h3')?.textContent?.trim()||'destination'));return}
+   const trigger=document.createElement('button');trigger.type='button';trigger.className='card-detail-trigger';trigger.textContent='View full details ↗';trigger.addEventListener('click',()=>openDetails(card));
+   const body=card.querySelector('.catalog-card-body')||card;
+   if(!body.querySelector('.card-detail-trigger'))body.appendChild(trigger);
+  });
+  close.addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
+  dialog.addEventListener('close',()=>{});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&dialog.open)dialog.close()});
+ }
  function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 });
