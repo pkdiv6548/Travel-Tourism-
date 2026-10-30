@@ -41,3 +41,8 @@
 /* Native category links: remain usable without JavaScript */
 .category-detail-link{text-decoration:none;}
 .category-detail-link:focus-visible{outline-offset:3px;}
+
+
+/* Keyboard skip navigation */
+.skip-link{position:absolute;z-index:1000;left:16px;top:10px;transform:translateY(-160%);padding:12px 16px;background:var(--lime);color:var(--green);font-size:12px;font-weight:700;border:2px solid var(--green)}
+.skip-link:focus{transform:translateY(0);outline:3px solid var(--green);outline-offset:3px}
