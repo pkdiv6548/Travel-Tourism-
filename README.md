@@ -9,9 +9,10 @@ A multi-page, responsive static website built from the Travel & Tourism Industry
 - `stays.html` — accommodation types and selection checklist.
 - `transport.html` — air, rail, road and transfer comparison.
 - `plan.html` — browser-only trip sketch with a downloadable text summary.
+- `industry-categories.html` — searchable, filterable map of 30 travel & tourism business-function categories.
 - `travel-tools.html` — research-based starter directory of real travel-industry software and official provider links.
 - `css/style.css` — shared responsive visual system.
-- `js/app.js` — mobile navigation, search, filters, year, newsletter demo and trip planner.
+- `js/app.js` — mobile navigation, destination search, category filters, industry-map search/filter, year, newsletter demo and trip planner.
 
 ## Preview
 Open `index.html` directly in a browser or enable GitHub Pages from the repository settings using the `main` branch and root folder.
