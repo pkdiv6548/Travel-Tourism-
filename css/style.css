@@ -37,3 +37,7 @@
 #detail-overview-grid .info-card p,#detail-roles .info-card p,#detail-systems .info-card p,#detail-metrics .info-card p{line-height:1.8}
 #detail-title{max-width:900px}
 @media(max-width:760px){.detail-workflow-list{grid-template-columns:1fr}}
+
+/* Native category links: remain usable without JavaScript */
+.category-detail-link{text-decoration:none;}
+.category-detail-link:focus-visible{outline-offset:3px;}
